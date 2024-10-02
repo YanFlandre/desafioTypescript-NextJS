@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
 import { useEffect, useRef, useState } from 'react';
 import { Client, Storage, ID } from 'appwrite'; // Import Appwrite
 
 const Webcam = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
-  const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null); // Replaced useState with useRef for mediaRecorder
+  const recordedChunksRef = useRef<Blob[]>([]); // Replaced useState with useRef for recordedChunks
   const [uploadStatus, setUploadStatus] = useState<string | null>(null); // State for upload status
+  const [isRecording, setIsRecording] = useState(false); // New state to track recording status
   
-   // Appwrite Client Setup
-   const client = new Client()
-   .setEndpoint('https://cloud.appwrite.io/v1')
-   .setProject('66fd40e300241b444c1e'); // Project ID created inside AppWrite
+  // Appwrite Client Setup
+  const client = new Client()
+    .setEndpoint('https://cloud.appwrite.io/v1')
+    .setProject('66fd40e300241b444c1e'); // Project ID created inside AppWrite
 
- const storage = new Storage(client);
-  
+  const storage = new Storage(client);
   
   useEffect(() => {
     // Access webcam stream using the API from the browser
@@ -39,7 +39,7 @@ const Webcam = () => {
     getWebcamStream();
 
     return () => {
-      // Stop webcam when component unmounts to prevent the webcam to keep working after no long in use
+      // Stop webcam when component unmounts
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach(track => track.stop());
@@ -60,61 +60,62 @@ const Webcam = () => {
   
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
-          setRecordedChunks((prev) => [...prev, event.data]);
+          recordedChunksRef.current.push(event.data); // Use ref to store chunks
         }
       };
   
       recorder.start();
-      setMediaRecorder(recorder);
-  
+      mediaRecorderRef.current = recorder;
+      setIsRecording(true); // Update recording state to true
     } catch (err) {
       console.error("Error capturing screen:", err);
     }
   };
 
-  // Stop screen recording and upload to Appwrite
-  const stopRecording = async () => {
-    if (mediaRecorder) {
-      mediaRecorder.stop();
+   // Stop screen recording and upload to Appwrite
+   const stopRecording = async () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.onstop = async () => {
+        const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+        const file = new File([blob], 'screen-recording.webm', { type: 'video/webm' });
 
-      const blob = new Blob(recordedChunks, { type: 'video/webm' });
-      const file = new File([blob], 'screen-recording.webm', { type: 'video/webm' });
+        // Upload to Appwrite Bucket
+        try {
+          const response = await storage.createFile(
+            '66fd4116001a97224873', // bucket ID
+            ID.unique(),
+            file
+          );
+          console.log('File uploaded successfully:', response);
+          setUploadStatus('Upload efetuado!'); // Success message
+        } catch (error) {
+          console.error('Error uploading file to Appwrite:', error);
+          setUploadStatus('Upload falhou!'); // Error message
+        }
 
-      // Upload to Appwrite Bucket
-      try {
-        const response = await storage.createFile(
-          '66fd4116001a97224873', // bucket ID
-          ID.unique(),
-          file
-        );
-        console.log('File uploaded successfully:', response);
-        setUploadStatus('Upload efetuado!'); // Success message
-      } catch (error) {
-        console.error('Error uploading file to Appwrite:', error);
-        setUploadStatus('Upload falhou!'); // Error message
-      }
+        recordedChunksRef.current = []; // Clear recorded chunks
+        mediaRecorderRef.current = null; // Reset media recorder
+        setIsRecording(false); // Update recording state to false
+      };
 
-      setRecordedChunks([]); // Clear recorded chunks
-      setMediaRecorder(null); // Reset media recorder
+      mediaRecorderRef.current.stop(); // Stop the recording
     }
   };
 
-
-  
   return (
     <div className="webcam-container">
       <div className="overlay">Desafio MedDeck</div>
       <video ref={videoRef} autoPlay width="480" height="270" />
       <div className="controls">
-        <button onClick={startRecording} disabled={!!mediaRecorder}>
+        <button onClick={startRecording} disabled={isRecording}>
           Iniciar Gravação
         </button>
-        <button onClick={stopRecording} disabled={!mediaRecorder}>
+        <button onClick={stopRecording} disabled={!isRecording}>
           Finalizar Gravação
         </button>
       </div>
-       {/* Upload status message */}
-       {uploadStatus && <div className="upload-status">{uploadStatus}</div>}  
+      {/* Upload status message */}
+      {uploadStatus && <div className="upload-status">{uploadStatus}</div>}
     </div>
   );
 };
