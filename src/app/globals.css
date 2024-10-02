@@ -41,3 +41,23 @@
   font-size: 16px;
   cursor: pointer;
 }
+
+/* Text overlay on top of the video */
+.overlay {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 64px;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  z-index: 10; /* Make sure it's on top of the video */
+}
+
+/* Upload status message */
+.upload-status {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: green;
+}

@@ -7,6 +7,7 @@ const Webcam = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
+  const [uploadStatus, setUploadStatus] = useState<string | null>(null); // State for upload status
   
    // Appwrite Client Setup
    const client = new Client()
@@ -87,8 +88,10 @@ const Webcam = () => {
           file
         );
         console.log('File uploaded successfully:', response);
+        setUploadStatus('Upload efetuado!'); // Success message
       } catch (error) {
         console.error('Error uploading file to Appwrite:', error);
+        setUploadStatus('Upload falhou!'); // Error message
       }
 
       setRecordedChunks([]); // Clear recorded chunks
@@ -96,17 +99,22 @@ const Webcam = () => {
     }
   };
 
+
+  
   return (
     <div className="webcam-container">
+      <div className="overlay">Desafio MedDeck</div>
       <video ref={videoRef} autoPlay width="480" height="270" />
       <div className="controls">
         <button onClick={startRecording} disabled={!!mediaRecorder}>
           Iniciar Gravação
         </button>
         <button onClick={stopRecording} disabled={!mediaRecorder}>
-          Parar Gravação e Upload
+          Finalizar Gravação
         </button>
       </div>
+       {/* Upload status message */}
+       {uploadStatus && <div className="upload-status">{uploadStatus}</div>}  
     </div>
   );
 };
