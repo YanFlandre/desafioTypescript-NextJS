@@ -3,31 +3,31 @@
 import { useEffect, useRef, useState } from 'react';
 import { Client, Storage, ID } from 'appwrite'; // Import Appwrite
 
+// Appwrite Client Setup (outside the component to avoid re-initializing on each render)
+const client = new Client()
+  .setEndpoint('https://cloud.appwrite.io/v1') 
+  .setProject('66fd40e300241b444c1e'); // Project ID created inside AppWrite
+
+const storage = new Storage(client);
+
 const Webcam = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null); // Replaced useState with useRef for mediaRecorder
   const recordedChunksRef = useRef<Blob[]>([]); // Replaced useState with useRef for recordedChunks
   const [uploadStatus, setUploadStatus] = useState<string | null>(null); // State for upload status
   const [isRecording, setIsRecording] = useState(false); // New state to track recording status
-  
-  // Appwrite Client Setup
-  const client = new Client()
-    .setEndpoint('https://cloud.appwrite.io/v1')
-    .setProject('66fd40e300241b444c1e'); // Project ID created inside AppWrite
 
-  const storage = new Storage(client);
-  
   useEffect(() => {
     // Access webcam stream using the API from the browser
     const getWebcamStream = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({  
+        const stream = await navigator.mediaDevices.getUserMedia({
           video: {
             width: 480,
             height: 270,
           },
         });
-        
+
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }
@@ -53,17 +53,17 @@ const Webcam = () => {
       const screenStream = await navigator.mediaDevices.getDisplayMedia({
         video: true, // Request video stream (screen capture)
       });
-  
+
       const recorder = new MediaRecorder(screenStream, {
         mimeType: 'video/webm; codecs=vp9',
       });
-  
+
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           recordedChunksRef.current.push(event.data); // Use ref to store chunks
         }
       };
-  
+
       recorder.start();
       mediaRecorderRef.current = recorder;
       setIsRecording(true); // Update recording state to true
@@ -72,8 +72,8 @@ const Webcam = () => {
     }
   };
 
-   // Stop screen recording and upload to Appwrite
-   const stopRecording = async () => {
+  // Stop screen recording and upload to Appwrite
+  const stopRecording = async () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.onstop = async () => {
         const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
