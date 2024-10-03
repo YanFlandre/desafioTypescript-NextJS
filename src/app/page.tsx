@@ -1,9 +1,10 @@
-import Webcam from "./screenUser";
+import ScreenRecorder from "./ScreenUser";
+import ScreenUser from "./ScreenUser";
 
 const Home = () => {
   return (
     <div className="page-container">
-      <Webcam />
+      <ScreenRecorder />
     </div>
   );
 };

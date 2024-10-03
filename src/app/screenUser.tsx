@@ -10,7 +10,7 @@ const client = new Client()
 
 const storage = new Storage(client);
 
-const Webcam = () => {
+const ScreenRecorder = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null); // Replaced useState with useRef for mediaRecorder
   const recordedChunksRef = useRef<Blob[]>([]); // Replaced useState with useRef for recordedChunks
@@ -120,4 +120,4 @@ const Webcam = () => {
   );
 };
 
-export default Webcam;
+export default ScreenRecorder;

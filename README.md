@@ -48,7 +48,7 @@ npm install
 
 ### 3. Configuração do Appwrite
 
-Abra o arquivo screenUser.tsx e insira suas credenciais do Appwrite:
+Abra o arquivo ScreenUser.tsx e insira suas credenciais do Appwrite:
 
 ID do Projeto: Substitua no método setProject com o seu ID do projeto do Appwrite.
 ID do Bucket: Substitua o bucketId com o ID do bucket no Appwrite onde os arquivos serão armazenados.
