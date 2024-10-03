@@ -69,7 +69,7 @@ Para rodar a aplicação localmente, utilize o comando:
 npm run dev
 ```
 
-Abra o navegador e acesse http://localhost:3000. Você verá a interface com o feed da webcam e os botões para iniciar e parar a gravação da tela.
+Abra o navegador e acesse https://localhost:3000. Você verá a interface com o feed da webcam e os botões para iniciar e parar a gravação da tela.
 
 ### 5. Como Usar
 
