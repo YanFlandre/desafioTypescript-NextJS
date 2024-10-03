@@ -1,5 +1,8 @@
 import { defineConfig } from '@playwright/test';
-// I added those flags to make the test ignore the webcam and select capture screen, it's not working properly for now. Will be fixed.
+
+/* I added those flags to make the test ignore the webcam and select capture screen, to prevent a bug where the test
+is unable to select the screen capture dialog box and continue the test.*/
+
 export default defineConfig({
   
   projects: [

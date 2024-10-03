@@ -1,8 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { Client, Storage } from 'appwrite';
 
-/* There is a known bug, the test is unable to select the screen capture dialog box and continue the test.
-I tried a few approaches but for now it only works in debug mode if you manually select a screen to share and record. */
+/* The test bug previously reported is fixed */
 
 const client = new Client()
   .setEndpoint('https://cloud.appwrite.io/v1')

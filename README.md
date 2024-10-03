@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📹 Gravação de Tela e Webcam com Integração ao Appwrite para o desafio da MedDeck
 
-## Getting Started
+Este projeto oferece uma funcionalidade simples de gravação de tela e captura de webcam usando a API de Mídia do navegador. Após a gravação, o vídeo é carregado para o armazenamento do **Appwrite**. A aplicação é construída com **React**, **Next.js** e utiliza o **Appwrite** como backend para armazenamento de arquivos.
 
-First, run the development server:
+## ⚙️ Funcionalidades
+
+- Captura o vídeo da webcam e o exibe na tela.
+- Permite gravar a tela do usuário.
+- Faz upload do vídeo gravado para o **Appwrite**.
+- Exibe o status do upload (sucesso ou falha) na interface.
+
+## 🛠️ Tecnologias Utilizadas
+
+- **Next.js** para o frontend.
+- **Appwrite** como serviço de backend para armazenamento de arquivos.
+- **React Hooks** para gerenciamento de estados.
+- **Media API** do navegador para captura de tela e webcam.
+- **Playwright** para fazer o teste do softuware posteriormente.
+
+## 🚀 Como Funciona
+
+1. O programa utiliza a API `navigator.mediaDevices.getUserMedia()` para acessar a webcam e `navigator.mediaDevices.getDisplayMedia()` para capturar a tela.
+2. O usuário pode iniciar e parar a gravação da tela usando os botões disponibilizados.
+3. Após parar a gravação, o vídeo é enviado para o bucket de armazenamento do Appwrite.
+4. O status do upload é exibido na tela (sucesso ou falha).
+
+## 📋 Pré-requisitos
+
+Antes de rodar o projeto, certifique-se de que você possui o seguinte configurado:
+
+- **Projeto no Appwrite**: Você precisará de uma instância do Appwrite em execução, juntamente com um projeto e um bucket de armazenamento configurado para salvar os vídeos.
+- **Credenciais do Appwrite**: Você precisará do **ID do Projeto** e **ID do Bucket** para configurar o programa.
+
+## 📦 Instalação
+
+### 1. Clonar o Repositório
+
+
+git clone git@github.com:YanFlandre/desafioTypescript-NextJS.git
+cd nome-do-repositorio
+
+### 2. Instalar as Dependências
+Certifique-se de ter o Node.js instalado. Execute o seguinte comando para instalar os pacotes necessários:
+
+```bash
+npm install
+```
+
+### 3. Configuração do Appwrite
+Abra o arquivo screenUser.tsx e insira suas credenciais do Appwrite:
+
+ID do Projeto: Substitua no método setProject com o seu ID do projeto do Appwrite.
+ID do Bucket: Substitua o bucketId com o ID do bucket no Appwrite onde os arquivos serão armazenados.
+```bash
+const client = new Client()
+  .setEndpoint('https://cloud.appwrite.io/v1') // Substitua pelo seu endpoint Appwrite
+  .setProject('seu_id_do_projeto'); // Substitua pelo ID do projeto Appwrite
+
+const storage = new Storage(client);
+```
+
+### 4. Executar o Servidor de Desenvolvimento
+Para rodar a aplicação localmente, utilize o comando:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra o navegador e acesse http://localhost:3000. Você verá a interface com o feed da webcam e os botões para iniciar e parar a gravação da tela.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 5. Como Usar
+Clique no botão Iniciar Gravação para começar a gravar a tela.
+Clique no botão Finalizar Gravação para parar a gravação e fazer o upload do vídeo para o Appwrite.
+Após o upload, uma mensagem com o status será exibida (Upload efetuado! em caso de sucesso ou Upload falhou! em caso de erro).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📁 Estrutura do Projeto
+pages/index.tsx: Ponto de entrada principal da aplicação.
+components/Webcam.tsx: Contém toda a lógica para exibição da webcam, gravação da tela e upload de arquivo para o Appwrite.
 
-## Learn More
+### 6. Como iniciar o teste com o Playwright
+Utilizando o console na pasta raiz do programa, rode o seguinte comando:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npx playwright test
+```
+Ou também pode ser utilizado modo debug para avaliar etapa a etapa do software:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npx playwright test --debug
+```
