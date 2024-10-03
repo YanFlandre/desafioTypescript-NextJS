@@ -24,6 +24,9 @@ export default defineConfig({
             '--autoplay-policy=no-user-gesture-required',
             '--disable-gpu',
             '--hide-scrollbars',
+            '--use-fake-ui-for-media-stream',
+            '--use-fake-device-for-media-stream',
+
           ],
         },
       },

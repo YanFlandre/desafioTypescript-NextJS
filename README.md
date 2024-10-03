@@ -35,11 +35,11 @@ Antes de rodar o projeto, certifique-se de que você possui o seguinte configura
 
 ### 1. Clonar o Repositório
 
-
 git clone git@github.com:YanFlandre/desafioTypescript-NextJS.git
 cd nome-do-repositorio
 
 ### 2. Instalar as Dependências
+
 Certifique-se de ter o Node.js instalado. Execute o seguinte comando para instalar os pacotes necessários:
 
 ```bash
@@ -47,10 +47,12 @@ npm install
 ```
 
 ### 3. Configuração do Appwrite
+
 Abra o arquivo screenUser.tsx e insira suas credenciais do Appwrite:
 
 ID do Projeto: Substitua no método setProject com o seu ID do projeto do Appwrite.
 ID do Bucket: Substitua o bucketId com o ID do bucket no Appwrite onde os arquivos serão armazenados.
+
 ```bash
 const client = new Client()
   .setEndpoint('https://cloud.appwrite.io/v1') // Substitua pelo seu endpoint Appwrite
@@ -60,6 +62,7 @@ const storage = new Storage(client);
 ```
 
 ### 4. Executar o Servidor de Desenvolvimento
+
 Para rodar a aplicação localmente, utilize o comando:
 
 ```bash
@@ -69,20 +72,31 @@ npm run dev
 Abra o navegador e acesse http://localhost:3000. Você verá a interface com o feed da webcam e os botões para iniciar e parar a gravação da tela.
 
 ### 5. Como Usar
+
 Clique no botão Iniciar Gravação para começar a gravar a tela.
 Clique no botão Finalizar Gravação para parar a gravação e fazer o upload do vídeo para o Appwrite.
 Após o upload, uma mensagem com o status será exibida (Upload efetuado! em caso de sucesso ou Upload falhou! em caso de erro).
 
 ## 📁 Estrutura do Projeto
+
 pages/index.tsx: Ponto de entrada principal da aplicação.
 components/Webcam.tsx: Contém toda a lógica para exibição da webcam, gravação da tela e upload de arquivo para o Appwrite.
 
 ### 6. Como iniciar o teste com o Playwright
-Utilizando o console na pasta raiz do programa, rode o seguinte comando:
+
+Utilizando o console na pasta raiz do programa, rode o seguinte comando para primeiro instalar o Playwrite(Caso não tenha sido instalado) e depois executar o teste:
+
+Obs: O programa precisar estar aberto e rodando no console para executar o teste.
+
+```bash
+npx playwright install
+
+```
 
 ```bash
 npx playwright test
 ```
+
 Ou também pode ser utilizado modo debug para avaliar etapa a etapa do software:
 
 ```bash
