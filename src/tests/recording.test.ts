@@ -11,7 +11,7 @@ const storage = new Storage(client);
 
 test.describe('Screen Recording Test', () => {
   test('Validate start and stop recording functionality', async ({ page }) => {
-    await page.goto('http://localhost:3000'); // Goes to the start page of the program
+    await page.goto('https://localhost:3000'); // Goes to the start page of the program
 
     // Check if "Iniciar Gravação" button is present
     const startButton = page.locator('button', { hasText: 'Iniciar Gravação' });
